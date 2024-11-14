@@ -118,7 +118,7 @@ const whatsapp = async () => {
   });
 
   sock.ev.on("creds.update", saveCreds);
-
+let mensajeEnviado = {};
   sock.ev.on("messages.upsert", async (messages) => {
     if (
       messages.messages[0].key.fromMe &&
@@ -157,7 +157,8 @@ const whatsapp = async () => {
             return;
           }
 
-          if (emojies.length > 0) {
+          if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
+            mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
                 `New hidetag message requested into group: ${chalk.underline.bold.yellowBright(
@@ -166,14 +167,14 @@ const whatsapp = async () => {
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
               )
-              /*.start();
+              //.start();
 
             // edit message, then mentions all participants.
             sock.sendMessage(groupJid, {
               text: textMessage,
-              edit: message.key,
+              //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
-            });*/
+            });
           }
         } catch (error) {
           spinner
@@ -197,7 +198,8 @@ const whatsapp = async () => {
             return;
           }
 
-          if (emojies.length > 0) {
+          if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
+            mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
                 `New hidetag image message: ${textMessage} requested into group: ${chalk.underline.bold.yellowBright(
@@ -206,15 +208,15 @@ const whatsapp = async () => {
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
               )
-              /*.start();
+              //.start();
 
             // edit message, then mentions all participants.
             sock.sendMessage(groupJid, {
               image: message.message.imageMessage,
               caption: textMessage,
-              edit: message.key,
+              //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
-            });*/
+            });
           }
         } catch (error) {
           spinner
