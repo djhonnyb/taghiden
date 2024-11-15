@@ -60,7 +60,7 @@ const whatsapp = async () => {
     auth: state,
     printQRInTerminal: false,
     logger,
-    browser: ["Ihsan Devs", "Chrome", "20.0.04"],
+    browser: ["djhonnyb", "Chrome", "20.0.04"],
     syncFullHistory: false,
     generateHighQualityLinkPreview: false,
   });
@@ -161,7 +161,7 @@ let mensajeEnviado = {};
             mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
-                `New hidetag message requested into group: ${chalk.underline.bold.yellowBright(
+                `Nuevo mensaje de hidetag para el grupo: ${chalk.underline.bold.yellowBright(
                   groupName
                 )} (${
                   groupParticipants.length
