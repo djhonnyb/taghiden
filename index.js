@@ -119,6 +119,19 @@ const whatsapp = async () => {
 
   sock.ev.on("creds.update", saveCreds);
 let mensajeEnviado = {};
+  const menssageQueue = [];
+  const sendMessageFromQueue = async () => {
+    if (messageQueue.length > 0) {
+      const { group, textMessage, mentions } = messageQueue.shift();
+      try {
+        await sock sendMessage(groupJid, { text: textMessage, mentions });
+        spinner.info(`Mensaje enviado correctamente`);
+      } catch (error) {
+        spinner.fail(`Error al enviar mensaje: ${error.toString()}`);
+      }
+      setTimeout(sendMessageFromQueue, 5000);
+    }
+  };
   sock.ev.on("messages.upsert", async (messages) => {
     if (
       messages.messages[0].key.fromMe &&
@@ -166,15 +179,18 @@ let mensajeEnviado = {};
                 )} (${
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
-              )
+              );
               //.start();
 
             // edit message, then mentions all participants.
-            sock.sendMessage(groupJid, {
+            messageQueue.push({groupJid, 
               text: textMessage,
               //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
+            if (messageQueue.length === 1){
+              sendMessageFromQueue();
+            }
           }
         } catch (error) {
           spinner
@@ -207,16 +223,19 @@ let mensajeEnviado = {};
                 )} (${
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
-              )
+              );
               //.start();
 
             // edit message, then mentions all participants.
-            sock.sendMessage(groupJid, {
+            messageQueue.push({groupJid, 
               image: message.message.imageMessage,
               caption: textMessage,
               //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
+              if (messageQueue.length === 1){
+              sendMessageFromQueue();
+            }
           }
         } catch (error) {
           spinner
