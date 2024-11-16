@@ -1,5 +1,6 @@
 # HIDETAG
 
+<img src="https://iili.io/2ArX7Lb.gif">
 Para usar esto más cómodamente es recomendable usar Termux, para así no depender de una pc.
 
 una vez instalado debes preparar la app Termux para que funcione sin ningún error
