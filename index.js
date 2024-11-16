@@ -15,7 +15,7 @@ const logger = pino({
   level: "silent",
 });
 
-const spinner = ora("Iniciando...").start();
+const spinner = ora("Starting...").start();
 
 const showBanner = () => {
   clear();
@@ -23,21 +23,21 @@ const showBanner = () => {
   const program_name = "Hidetag Whatsapp";
 
   const author =
-    chalk.yellow("\nCodigo fuente: ") +
+    chalk.yellow("\nSource: ") +
     chalk.underline.greenBright("https://t.me/djhonnyb\n");
 
   const howToUseEn =
-    chalk.magenta.bold("Cómo usar:\n") +
+    chalk.magenta.bold("How to use:\n") +
     chalk.blueBright(
-      `Despues de escanear el código QR y conectar tu cuenta de WhatsApp, puedes enviar mensajes de texto libremente.
-      Para utilizar el hidetag, simplemente envía un mensaje a un grupo con cualquier emoji.\n`
+      `Once the QR code is scanned and connected to your WhatsApp account, you can send any text message.
+To trigger the hidetag, send a message to a group containing any emoji.\n`
     );
 
   const howToUseId =
-    chalk.magenta.bold("Instrucciones de uso:\n") +
+    chalk.magenta.bold("Cara pakai:\n") +
     chalk.blueBright(
-      `Una vez que hayas escaneado el código QR y te hayas conectado a WhatsApp, puedes enviar mensaje de texto libremente.
-      Para utilizar el hidetag, simplemente envía un mensaje a un grupo con cualquier emoji.\n`
+      `Setelah kode QR di-scan dan telah terhubung ke akun whatsapp kamu, kamu bisa mengirim pesan text apapun.
+Untuk mentrigger hidetag, kirim pesan ke sebuah grup dengan mengandung emoji apa saja.\n`
     );
 
   const banner = chalk.magentaBright(figlet.textSync(program_name));
@@ -60,7 +60,7 @@ const whatsapp = async () => {
     auth: state,
     printQRInTerminal: false,
     logger,
-    browser: ["djhonnyb", "Chrome", "20.0.04"],
+    browser: ["Ihsan Devs", "Chrome", "20.0.04"],
     syncFullHistory: false,
     generateHighQualityLinkPreview: false,
   });
@@ -77,7 +77,7 @@ const whatsapp = async () => {
         })
       );
 
-      spinner.start("Porfavor escanee el código QR...");
+      spinner.start("Please scan the QR Code...");
     }
 
     if (connection === "close") {
@@ -92,7 +92,7 @@ const whatsapp = async () => {
         DisconnectReason.restartRequired;
       spinner
         .warn(
-          "conexión cerrado debido a: ",
+          "connection closed due to ",
           lastDisconnect.error,
           ", reconnecting ",
           shouldReconnect
@@ -109,29 +109,17 @@ const whatsapp = async () => {
       // reconnect if not logged out
       if (shouldReconnect || requiredRestart) {
         showBanner();
-        spinner.start("reconectando...");
+        spinner.start("reconnecting...");
         whatsapp();
       }
     } else if (connection === "open") {
-      spinner.succeed("conexión abierta").start("Esperando nuevo mensaje...");
+      spinner.succeed("opened connection").start("Waiting new message...");
     }
   });
 
   sock.ev.on("creds.update", saveCreds);
+
 let mensajeEnviado = {};
-  const messageQueue = [];
-  const sendMessageFromQueue = async () => {
-    if (messageQueue.length > 0) {
-      const { group, textMessage, mentions } = messageQueue.shift();
-      try {
-        await sock.sendMessage(groupJid, { text: textMessage, mentions });
-        spinner.info(`Mensaje enviado correctamente`);
-      } catch (error) {
-        spinner.fail(`Error al enviar mensaje: ${error.toString()}`);
-      }
-      setTimeout(sendMessageFromQueue, 5000);
-    }
-  };
   sock.ev.on("messages.upsert", async (messages) => {
     if (
       messages.messages[0].key.fromMe &&
@@ -146,13 +134,7 @@ let mensajeEnviado = {};
       const groupParticipants = group.participants;
 
       const groupName = group.subject;
-
-      //   console.log(
-      //     message,
-      //     groupParticipants.map((item) => item.id)
-      //   );
-
-      if (
+if (
         message.message.extendedTextMessage?.text ||
         message.message.conversation
       ) {
@@ -171,31 +153,28 @@ let mensajeEnviado = {};
           }
 
           if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
-            mensajeEnviado[message.key.remoteJid] = true;
+mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
-                `Nuevo mensaje de hidetag para el grupo: ${chalk.underline.bold.yellowBright(
+                `New hidetag message requested into group: ${chalk.underline.bold.yellowBright(
                   groupName
                 )} (${
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
-              );
+              )
               //.start();
 
             // edit message, then mentions all participants.
-            messageQueue.push({groupJid, 
+            sock.sendMessage(groupJid, {
               text: textMessage,
               //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
-            if (messageQueue.length === 1){
-              sendMessageFromQueue();
-            }
           }
         } catch (error) {
           spinner
             .fail(
-              `Error de envío de mensaje con hidetag. Error: ${error.toString()}`
+              `Failed to send message using hidetag. Error: ${error.toString()}`
             )
             .start();
         }
@@ -215,7 +194,7 @@ let mensajeEnviado = {};
           }
 
           if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
-            mensajeEnviado[message.key.remoteJid] = true;
+mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
                 `New hidetag image message: ${textMessage} requested into group: ${chalk.underline.bold.yellowBright(
@@ -223,24 +202,21 @@ let mensajeEnviado = {};
                 )} (${
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
-              );
+              )
               //.start();
 
             // edit message, then mentions all participants.
-            messageQueue.push({groupJid, 
+            sock.sendMessage(groupJid, {
               image: message.message.imageMessage,
               caption: textMessage,
               //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
-              if (messageQueue.length === 1){
-              sendMessageFromQueue();
-            }
           }
         } catch (error) {
           spinner
             .fail(
-              `Error de envío de mensaje con hidetag. Error: ${error.toString()}`
+              `Failed to send message using hidetag. Error: ${error.toString()}`
             )
             .start();
         }
