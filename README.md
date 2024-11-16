@@ -20,7 +20,7 @@ cd taghiden
 npm install ora
 ```
 
-#### Para iniciar uso este comando
+#### Para iniciar use este comando
 ```bash
 node .
 ```
