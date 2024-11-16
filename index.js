@@ -15,29 +15,29 @@ const logger = pino({
   level: "silent",
 });
 
-const spinner = ora("Starting...").start();
+const spinner = ora("Iniciando...").start();
 
 const showBanner = () => {
   clear();
 
-  const program_name = "Hidetag Whatsapp";
+  const program_name = "Hidetag Jhonny";
 
   const author =
-    chalk.yellow("\nSource: ") +
+    chalk.yellow("\nCódigo fuente: ") +
     chalk.underline.greenBright("https://t.me/djhonnyb\n");
 
   const howToUseEn =
+    chalk.magenta.bold("Cómo usar:\n") +
+    chalk.blueBright(
+      `Una vez que el código QR se escanea y se conecta a tu cuenta de WhatsApp, puedes enviar cualquier mensaje de texto.
+Para activar el hidetag, envía un mensaje a un grupo que contenga cualquier emoji.\n`
+    );
+
+  const howToUseId =
     chalk.magenta.bold("How to use:\n") +
     chalk.blueBright(
       `Once the QR code is scanned and connected to your WhatsApp account, you can send any text message.
 To trigger the hidetag, send a message to a group containing any emoji.\n`
-    );
-
-  const howToUseId =
-    chalk.magenta.bold("Cara pakai:\n") +
-    chalk.blueBright(
-      `Setelah kode QR di-scan dan telah terhubung ke akun whatsapp kamu, kamu bisa mengirim pesan text apapun.
-Untuk mentrigger hidetag, kirim pesan ke sebuah grup dengan mengandung emoji apa saja.\n`
     );
 
   const banner = chalk.magentaBright(figlet.textSync(program_name));
@@ -60,7 +60,7 @@ const whatsapp = async () => {
     auth: state,
     printQRInTerminal: false,
     logger,
-    browser: ["Ihsan Devs", "Chrome", "20.0.04"],
+    browser: ["djhonnyb", "Chrome", "20.0.04"],
     syncFullHistory: false,
     generateHighQualityLinkPreview: false,
   });
@@ -77,7 +77,7 @@ const whatsapp = async () => {
         })
       );
 
-      spinner.start("Please scan the QR Code...");
+      spinner.start("Por favor escanee el código QR...");
     }
 
     if (connection === "close") {
@@ -92,7 +92,7 @@ const whatsapp = async () => {
         DisconnectReason.restartRequired;
       spinner
         .warn(
-          "connection closed due to ",
+          "conexión cerrada debido a ",
           lastDisconnect.error,
           ", reconnecting ",
           shouldReconnect
@@ -109,11 +109,11 @@ const whatsapp = async () => {
       // reconnect if not logged out
       if (shouldReconnect || requiredRestart) {
         showBanner();
-        spinner.start("reconnecting...");
+        spinner.start("reconectando...");
         whatsapp();
       }
     } else if (connection === "open") {
-      spinner.succeed("opened connection").start("Waiting new message...");
+      spinner.succeed("opened connection").start("Esperando nuevo mensaje...");
     }
   });
 
@@ -174,7 +174,7 @@ mensajeEnviado[message.key.remoteJid] = true;
         } catch (error) {
           spinner
             .fail(
-              `Failed to send message using hidetag. Error: ${error.toString()}`
+              `Falló el envio de mensaje con hidetag. Error: ${error.toString()}`
             )
             .start();
         }
@@ -197,7 +197,7 @@ mensajeEnviado[message.key.remoteJid] = true;
 mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
-                `New hidetag image message: ${textMessage} requested into group: ${chalk.underline.bold.yellowBright(
+                `Nuevo memsaje de imagen con hidetag: ${textMessage} Solocitado para el grupo: ${chalk.underline.bold.yellowBright(
                   groupName
                 )} (${
                   groupParticipants.length
