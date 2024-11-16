@@ -119,7 +119,7 @@ const whatsapp = async () => {
 
   sock.ev.on("creds.update", saveCreds);
 let mensajeEnviado = {};
-  const menssageQueue = [];
+  const messageQueue = [];
   const sendMessageFromQueue = async () => {
     if (messageQueue.length > 0) {
       const { group, textMessage, mentions } = messageQueue.shift();
