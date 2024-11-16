@@ -124,7 +124,7 @@ let mensajeEnviado = {};
     if (messageQueue.length > 0) {
       const { group, textMessage, mentions } = messageQueue.shift();
       try {
-        await sock sendMessage(groupJid, { text: textMessage, mentions });
+        await sock.sendMessage(groupJid, { text: textMessage, mentions });
         spinner.info(`Mensaje enviado correctamente`);
       } catch (error) {
         spinner.fail(`Error al enviar mensaje: ${error.toString()}`);
