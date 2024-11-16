@@ -29,15 +29,15 @@ const showBanner = () => {
   const howToUseEn =
     chalk.magenta.bold("Cómo usar:\n") +
     chalk.blueBright(
-      `Una vez que el código QR se escanea y se conecta a tu cuenta de WhatsApp, puedes enviar cualquier mensaje de texto.
-Para activar el hidetag, envía un mensaje a un grupo que contenga cualquier emoji.\n`
+      `Once the QR code is scanned and connected to your WhatsApp account, you can send any text message.
+To trigger the hidetag, send a message to a group containing any emoji.\n`
     );
 
   const howToUseId =
-    chalk.magenta.bold("How to use:\n") +
+    chalk.magenta.bold("Cómo usar:Una vez que el código QR se escanea y se conecta a tu cuenta de WhatsApp, puedes enviar cualquier mensaje de texto.
+Para activar el hidetag, envía un mensaje a un grupo que contenga cualquier emoji.\n") +
     chalk.blueBright(
-      `Once the QR code is scanned and connected to your WhatsApp account, you can send any text message.
-To trigger the hidetag, send a message to a group containing any emoji.\n`
+      `\n`
     );
 
   const banner = chalk.magentaBright(figlet.textSync(program_name));
