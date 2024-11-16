@@ -216,7 +216,7 @@ mensajeEnviado[message.key.remoteJid] = true;
         } catch (error) {
           spinner
             .fail(
-              `Failed to send message using hidetag. Error: ${error.toString()}`
+              `Falló el envio de memsaje usando hidetag. Error: ${error.toString()}`
             )
             .start();
         }
