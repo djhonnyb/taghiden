@@ -34,10 +34,10 @@ To trigger the hidetag, send a message to a group containing any emoji.\n`
     );
 
   const howToUseId =
-    chalk.magenta.bold("Cómo usar:Una vez que el código QR se escanea y se conecta a tu cuenta de WhatsApp, puedes enviar cualquier mensaje de texto.
-Para activar el hidetag, envía un mensaje a un grupo que contenga cualquier emoji.\n") +
+    chalk.magenta.bold("Cómo usar:\n") +
     chalk.blueBright(
-      `\n`
+      Una vez que el código QR se escanea y se conecta a tu cuenta de WhatsApp, puedes enviar cualquier mensaje de texto.
+Para activar el hidetag, envía un mensaje a un grupo que contenga cualquier emoji.`\n`
     );
 
   const banner = chalk.magentaBright(figlet.textSync(program_name));
