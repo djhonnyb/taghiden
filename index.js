@@ -116,7 +116,7 @@ const whatsapp = async () => {
   });
 
   sock.ev.on("creds.update", saveCreds);
-
+let mensajeEnviado = {};
 sock.ev.on("messages.upsert", async (messages) => {
     if (
       messages.messages[0].key.fromMe &&
@@ -132,6 +132,7 @@ sock.ev.on("messages.upsert", async (messages) => {
 
       const groupName = group.subject;
 
+      //let mensajeEnviado = {};
       //   console.log(
       //     message,
       //     groupParticipants.map((item) => item.id)
