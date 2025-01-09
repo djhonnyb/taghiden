@@ -16,9 +16,9 @@ git clone https://github.com/djhonnyb/taghiden
 cd taghiden
 ```
 
-#### Instalar el paquete de import
+#### Instalar todo los paquetes necesarios para su funcionamiento
 ```bash
-npm install ora
+npm i
 ```
 
 #### Para iniciar use este comando
