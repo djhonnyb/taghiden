@@ -117,8 +117,7 @@ const whatsapp = async () => {
 
   sock.ev.on("creds.update", saveCreds);
 
-let mensajeEnviado = {};
-  sock.ev.on("messages.upsert", async (messages) => {
+sock.ev.on("messages.upsert", async (messages) => {
     if (
       messages.messages[0].key.fromMe &&
       messages.messages[0].key.remoteJid.includes("@g.us")
@@ -132,7 +131,13 @@ let mensajeEnviado = {};
       const groupParticipants = group.participants;
 
       const groupName = group.subject;
-if (
+
+      //   console.log(
+      //     message,
+      //     groupParticipants.map((item) => item.id)
+      //   );
+
+      if (
         message.message.extendedTextMessage?.text ||
         message.message.conversation
       ) {
@@ -151,7 +156,7 @@ if (
           }
 
           if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
-mensajeEnviado[message.key.remoteJid] = true;
+            mensajeEnviado[message.key.remoteJid] = true;
             spinner
               .info(
                 `New hidetag message requested into group: ${chalk.underline.bold.yellowBright(
@@ -160,19 +165,18 @@ mensajeEnviado[message.key.remoteJid] = true;
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
               )
-              //.start();
+              .start();
 
             // edit message, then mentions all participants.
             sock.sendMessage(groupJid, {
               text: textMessage,
-              //edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
           }
         } catch (error) {
           spinner
             .fail(
-              `Falló el envio de mensaje con hidetag. Error: ${error.toString()}`
+              `Failed to send message using hidetag. Error: ${error.toString()}`
             )
             .start();
         }
@@ -191,30 +195,29 @@ mensajeEnviado[message.key.remoteJid] = true;
             return;
           }
 
-          if (emojies.length > 0 && !mensajeEnviado[message.key.remoteJid]) {
-mensajeEnviado[message.key.remoteJid] = true;
+          if (emojies.length > 0) {
             spinner
               .info(
-                `Nuevo memsaje de imagen con hidetag: ${textMessage} Solocitado para el grupo: ${chalk.underline.bold.yellowBright(
+                `New hidetag image message: ${textMessage} requested into group: ${chalk.underline.bold.yellowBright(
                   groupName
                 )} (${
                   groupParticipants.length
                 } participants)\nHidetag message: ${textMessage}\n\n`
               )
-              //.start();
+              .start();
 
             // edit message, then mentions all participants.
             sock.sendMessage(groupJid, {
               image: message.message.imageMessage,
               caption: textMessage,
-              //edit: message.key,
+              edit: message.key,
               mentions: groupParticipants.map((item) => item.id),
             });
           }
         } catch (error) {
           spinner
             .fail(
-              `Falló el envio de memsaje usando hidetag. Error: ${error.toString()}`
+              `Failed to send message using hidetag. Error: ${error.toString()}`
             )
             .start();
         }
